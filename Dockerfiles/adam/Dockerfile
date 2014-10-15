@@ -1,5 +1,5 @@
-# Building the image using UBUNTU
-FROM ubuntu:latest
+# Building the image using UBUNTU 14.04
+FROM ubuntu:14.04
 
 # Naming me as the maintainer
 MAINTAINER Sebastien Bonami

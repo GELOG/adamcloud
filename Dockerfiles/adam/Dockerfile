@@ -4,12 +4,12 @@ FROM ubuntu:14.04
 # Naming me as the maintainer
 MAINTAINER Sebastien Bonami
 
-# Getting SPARK 1.0.0 binaries pre-built for HADOOP 2.2
-ADD http://d3kbcqa49mib13.cloudfront.net/spark-1.0.1-bin-hadoop2.tgz /
-RUN sudo tar -zxf /spark-1.0.1-bin-hadoop2.tgz
-RUN sudo rm /spark-1.0.1-bin-hadoop2.tgz
-RUN sudo mv /spark-1.0.1-bin-hadoop2 /usr/local
-ENV SPARK_HOME /usr/local/spark-1.0.1-bin-hadoop2
+# Getting SPARK 1.1.0 binaries pre-built for HADOOP 2.3
+ADD http://d3kbcqa49mib13.cloudfront.net/spark-1.1.0-bin-hadoop2.3.tgz /
+RUN sudo tar -zxf /spark-1.1.0-bin-hadoop2.3.tgz
+RUN sudo rm /spark-1.1.0-bin-hadoop2.3.tgz
+RUN sudo mv /spark-1.1.0-bin-hadoop2.3 /usr/local
+ENV SPARK_HOME /usr/local/spark-1.1.0-bin-hadoop2.3
 
 # Installing GIT and JDK
 RUN sudo apt-get update && sudo apt-get install -y git default-jdk
@@ -26,6 +26,7 @@ ENV MAVEN_OPTS -Xmx512m -XX:MaxPermSize=128m
 
 # Installing ADAM
 RUN git clone https://github.com/bigdatagenomics/adam
+RUN sed -i /adam/pom.xml -e '27s!2.2!2.3!'
 RUN cd /adam && sudo mvn clean package -DskipTestexp
 
 # Creating aliases to make ADAM run easier

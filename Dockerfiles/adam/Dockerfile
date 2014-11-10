@@ -9,7 +9,8 @@ ADD http://d3kbcqa49mib13.cloudfront.net/spark-1.1.0-bin-hadoop2.3.tgz /
 RUN sudo tar -zxf /spark-1.1.0-bin-hadoop2.3.tgz
 RUN sudo rm /spark-1.1.0-bin-hadoop2.3.tgz
 RUN sudo mv /spark-1.1.0-bin-hadoop2.3 /usr/local
-ENV SPARK_HOME /usr/local/spark-1.1.0-bin-hadoop2.3
+RUN sudo ln -s /usr/local/spark-1.1.0-bin-hadoop2.3 /usr/local/spark
+ENV SPARK_HOME /usr/local/spark
 
 # Installing GIT and JDK
 RUN sudo apt-get update && sudo apt-get install -y git default-jdk

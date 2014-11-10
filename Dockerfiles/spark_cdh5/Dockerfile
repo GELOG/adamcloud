@@ -4,9 +4,6 @@ FROM ubuntu:14.04
 # Naming me as the maintainer
 MAINTAINER Sebastien Bonami
 
-# Installing WGET
-RUN sudo apt-get update && sudo apt-get install -y wget
-
 # Installing Oracke JDK 7
 RUN sudo apt-get update && sudo apt-get install -y software-properties-common
 RUN sudo add-apt-repository ppa:webupd8team/java -y
@@ -20,4 +17,5 @@ RUN dpkg -i cdh5-repository_1.0_all.deb
 RUN sudo apt-get update && sudo apt-get install -y spark-core spark-master spark-worker spark-history-server spark-python
 
 # Fixing issue (Reference: https://groups.google.com/a/cloudera.org/forum/#!topic/cdh-user/eAW-hiUHdzY)
-ADD https://raw.githubusercontent.com/apache/spark/master/bin/utils.sh /usr/lib/spark/bin
+ADD https://raw.githubusercontent.com/apache/spark/master/bin/utils.sh /
+RUN sudo mv /utils.sh /usr/lib/spark/bin

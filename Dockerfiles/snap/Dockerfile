@@ -4,14 +4,15 @@ FROM ubuntu:14.04
 # Naming me as the maintainer
 MAINTAINER Sebastien Bonami
 
-# Installing WGET, GIT, MAKE and G++
-RUN sudo apt-get update && sudo apt-get install -y wget git make g++
+# Installing GIT, MAKE and G++
+RUN sudo apt-get update && sudo apt-get install -y git make g++
 
 # Installing ZLIB 1.2.8
-RUN wget http://zlib.net/zlib-1.2.8.tar.gz
+RUN ADD http://zlib.net/zlib-1.2.8.tar.gz /
 RUN sudo tar -zxf /zlib-1.2.8.tar.gz
 RUN sudo rm /zlib-1.2.8.tar.gz
 RUN sudo mv /zlib-1.2.8 /usr/local
+RUN sudo ln -s /usr/local/zlib-1.2.8 /usr/local/zlib
 RUN cd /usr/local/zlib-1.2.8 && sudo ./configure && sudo make && sudo make install
 
 # Installing SNAP

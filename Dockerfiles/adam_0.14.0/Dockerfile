@@ -4,6 +4,14 @@ FROM ubuntu:14.04
 # Naming me as the maintainer
 MAINTAINER Sebastien Bonami
 
+# Getting SPARK 1.1.0 binaries pre-built for HADOOP 2.3
+ADD http://d3kbcqa49mib13.cloudfront.net/spark-1.1.0-bin-hadoop2.3.tgz /
+RUN sudo tar -zxf /spark-1.1.0-bin-hadoop2.3.tgz
+RUN sudo rm /spark-1.1.0-bin-hadoop2.3.tgz
+RUN sudo mv /spark-1.1.0-bin-hadoop2.3 /usr/local
+RUN sudo ln -s /usr/local/spark-1.1.0-bin-hadoop2.3 /usr/local/spark
+ENV SPARK_HOME /usr/local/spark
+
 # Installing JDK
 RUN sudo apt-get update && sudo apt-get install -y default-jdk
 
@@ -22,7 +30,7 @@ ADD https://github.com/bigdatagenomics/adam/archive/adam-parent-0.14.0.tar.gz /
 RUN sudo tar -zxf /adam-parent-0.14.0.tar.gz
 RUN sudo rm /adam-parent-0.14.0.tar.gz
 RUN sudo ln -s /adam-adam-parent-0.14.0 /adam
-# RUN sed -i /adam/pom.xml -e '27s!2.2!2.3!'
+RUN sed -i /adam/pom.xml -e '27s!2.2!2.3!'
 RUN cd /adam && sudo mvn clean package -DskipTests
 
 # Creating aliases to make ADAM run easier

@@ -29,12 +29,14 @@ ENV SCALA_HOME /scala
 ADD http://d3kbcqa49mib13.cloudfront.net/spark-1.1.0.tgz /
 RUN sudo tar -zxf /spark-1.1.0.tgz
 RUN sudo rm /spark-1.1.0.tgz
-RUN sudo ln -s /spark-1.1.0 /spark
-RUN cd /spark && sudo sbt/sbt assembly
+RUN sudo mv /spark-1.1.0 /usr/local
+RUN sudo ln -s /usr/local/spark-1.1.0 /usr/local/spark
+RUN cd /usr/local/spark && sudo sbt/sbt assembly
+ENV SPARK_HOME /usr/local/spark
 
 # Creating aliases to make SPARK run easier
-RUN bash -c 'echo "alias spark-submit="/spark/bin/spark-submit"" >> /.bashrc'
-RUN bash -c 'echo "alias spark-shell="/spark/bin/spark-shell"" >> /.bashrc'
+RUN bash -c 'echo "alias spark-submit="/usr/local/spark/bin/spark-submit"" >> /.bashrc'
+RUN bash -c 'echo "alias spark-shell="/usr/local/spark/bin/spark-shell"" >> /.bashrc'
 
 # Autostarting SPARK to show available commands
 RUN bash -c 'echo "spark-submit" >> /.bashrc'

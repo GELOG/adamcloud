@@ -26,11 +26,13 @@ RUN sudo ln -s /usr/local/apache-maven-3.2.3/bin/mvn /usr/bin/mvn
 ENV MAVEN_OPTS -Xmx512m -XX:MaxPermSize=128m
 
 # Installing AVOCADO
-RUN sudo git clone https://github.com/bigdatagenomics/avocado
-RUN cd /avocado && sudo mvn package
+RUN git clone https://github.com/bigdatagenomics/avocado
+RUN sudo mv /avocado /usr/local
+RUN cd /usr/local/avocado && sudo mvn package
+ENV AVOCADO_HOME /usr/local/avocado
 
 # Creating an alias to make AVOCADO run easier
-RUN bash -c 'echo "alias avocado="/avocado/bin/avocado-submit"" >> /.bashrc'
+RUN bash -c 'echo "alias avocado-submit="${AVOCADO_HOME}/bin/avocado-submit"" >> ~/.bashrc'
 
 # Autostarting AVOCADO to show available commands
-RUN bash -c 'echo "avocado" >> /.bashrc'
+RUN bash -c 'echo "avocado-submit" >> ~/.bashrc'

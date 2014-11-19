@@ -29,13 +29,15 @@ ENV MAVEN_OPTS -Xmx512m -XX:MaxPermSize=128m
 ADD https://github.com/bigdatagenomics/adam/archive/adam-parent-0.14.0.tar.gz /
 RUN sudo tar -zxf /adam-parent-0.14.0.tar.gz
 RUN sudo rm /adam-parent-0.14.0.tar.gz
-RUN sudo ln -s /adam-adam-parent-0.14.0 /adam
-RUN sed -i /adam/pom.xml -e '27s!2.2!2.3!'
-RUN cd /adam && sudo mvn clean package -DskipTests
+RUN sudo mv /adam-adam-parent-0.14.0 /usr/local
+RUN sudo ln -s /usr/local/adam-adam-parent-0.14.0 /usr/local/adam
+RUN sed -i /usr/local/adam/pom.xml -e '27s!2.2!2.3!'
+RUN cd /usr/local/adam && sudo mvn clean package -DskipTests
+ENV ADAM_HOME /usr/local/adam
 
 # Creating aliases to make ADAM run easier
-RUN bash -c 'echo "alias adam="/adam/bin/adam-submit"" >> /.bashrc'
-RUN bash -c 'echo "alias adam-shell="/adam/bin/adam-shell"" >> /.bashrc'
+RUN bash -c 'echo "alias adam-submit="${ADAM_HOME}/bin/adam-submit"" >> ~/.bashrc'
+RUN bash -c 'echo "alias adam-shell="${ADAM_HOME}/bin/adam-shell"" >> ~/.bashrc'
 
 # Autostarting ADAM to show available commands
-RUN bash -c 'echo "adam" >> /.bashrc'
+RUN bash -c 'echo "adam-submit" >> ~/.bashrc'

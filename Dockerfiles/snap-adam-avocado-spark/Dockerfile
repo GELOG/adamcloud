@@ -17,7 +17,7 @@ RUN sudo apt-get update && sudo apt-get install -y git make g++ default-jdk
 
 # Installing ZLIB 1.2.8 (for SNAP)
 ADD http://zlib.net/zlib-1.2.8.tar.gz /
-RUN sudo tar -zxf /zlib-1.2.8.tar.gz
+RUN sudo tar -xf /zlib-1.2.8.tar.gz
 RUN sudo rm /zlib-1.2.8.tar.gz
 RUN sudo mv /zlib-1.2.8 /usr/local
 RUN sudo ln -s /usr/local/zlib-1.2.8 /usr/local/zlib
@@ -25,7 +25,9 @@ RUN cd /usr/local/zlib-1.2.8 && sudo ./configure && sudo make && sudo make insta
 
 # Installing SNAP
 RUN sudo git clone https://github.com/amplab/snap
-RUN cd /snap && sudo make
+RUN sudo mv /snap /usr/local
+RUN cd /usr/local/snap && sudo make
+ENV SNAP_HOME /usr/local/snap
 
 # Getting MAVEN 3.2.3 (for ADAM and AVOCADO)
 ADD http://mirror.its.dal.ca/apache/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.tar.gz /
@@ -39,15 +41,19 @@ ENV MAVEN_OPTS -Xmx512m -XX:MaxPermSize=128m
 
 # Installing ADAM
 RUN git clone https://github.com/bigdatagenomics/adam
-RUN sed -i /adam/pom.xml -e '27s!2.2!2.3!'
-RUN cd /adam && sudo mvn clean package -DskipTestexp
+RUN sudo mv /adam /usr/local
+RUN sed -i /usr/local/adam/pom.xml -e '27s!2.2!2.3!'
+RUN cd /usr/local/adam && sudo mvn clean package -DskipTestexp
+ENV ADAM_HOME /usr/local/adam
 
 # Installing AVOCADO
-RUN sudo git clone https://github.com/bigdatagenomics/avocado
-RUN cd /avocado && sudo mvn package
+RUN git clone https://github.com/bigdatagenomics/avocado
+RUN sudo mv /avocado /usr/local
+RUN cd /usr/local/avocado && sudo mvn package
+ENV AVOCADO_HOME /usr/local/avocado
 
 # Creating aliases to make SNAP, ADAM and AVOCADO run easier
-RUN bash -c 'echo "alias snap="/snap/snap"" >> /.bashrc'
-RUN bash -c 'echo "alias adam="/adam/bin/adam-submit"" >> /.bashrc'
-RUN bash -c 'echo "alias adam-shell="/adam/bin/adam-shell"" >> /.bashrc'
-RUN bash -c 'echo "alias avocado="/avocado/bin/avocado-submit"" >> /.bashrc'
+RUN bash -c 'echo "alias snap="${SNAP_HOME}/snap"" >> ~/.bashrc'
+RUN bash -c 'echo "alias adam-submit="${ADAM_HOME}/bin/adam-submit"" >> ~/.bashrc'
+RUN bash -c 'echo "alias adam-shell="${ADAM_HOME}/bin/adam-shell"" >> ~/.bashrc'
+RUN bash -c 'echo "alias avocado-submit="${AVOCADO_HOME}/bin/avocado-submit"" >> ~/.bashrc'

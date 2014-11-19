@@ -22,8 +22,9 @@ RUN sudo rm /sbt-0.13.6.deb
 ADD http://www.scala-lang.org/files/archive/scala-2.10.4.tgz /
 RUN sudo tar -zxf /scala-2.10.4.tgz
 RUN sudo rm /scala-2.10.4.tgz
-RUN sudo ln -s /scala-2.10.4 /scala
-ENV SCALA_HOME /scala
+RUN sudo mv /scala-2.10.4 /usr/local
+RUN sudo ln -s /usr/local/scala-2.10.4 /usr/local/scala
+ENV SCALA_HOME /usr/local/scala
 
 # Installing SPARK 1.1.0
 ADD http://d3kbcqa49mib13.cloudfront.net/spark-1.1.0.tgz /
@@ -35,8 +36,8 @@ RUN cd /usr/local/spark && sudo sbt/sbt assembly
 ENV SPARK_HOME /usr/local/spark
 
 # Creating aliases to make SPARK run easier
-RUN bash -c 'echo "alias spark-submit="/usr/local/spark/bin/spark-submit"" >> /.bashrc'
-RUN bash -c 'echo "alias spark-shell="/usr/local/spark/bin/spark-shell"" >> /.bashrc'
+RUN bash -c 'echo "alias spark-submit="${SPARK_HOME}/bin/spark-submit"" >> ~/.bashrc'
+RUN bash -c 'echo "alias spark-shell="${SPARK_HOME}/bin/spark-shell"" >> ~/.bashrc'
 
 # Autostarting SPARK to show available commands
-RUN bash -c 'echo "spark-submit" >> /.bashrc'
+RUN bash -c 'echo "spark-submit" >> ~/.bashrc'

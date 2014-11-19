@@ -19,3 +19,6 @@ RUN sudo apt-get update && sudo apt-get install -y spark-core spark-master spark
 # Fixing issue (Reference: https://groups.google.com/a/cloudera.org/forum/#!topic/cdh-user/eAW-hiUHdzY)
 ADD https://raw.githubusercontent.com/apache/spark/master/bin/utils.sh /
 RUN sudo mv /utils.sh /usr/lib/spark/bin
+
+# Autostarting SPARK to show available commands
+RUN bash -c 'echo "spark-submit" >> ~/.bashrc'

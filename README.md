@@ -9,6 +9,8 @@ This repository provides multiple Dockerfiles related to the AdamCloud project.
 * adam_0.14.0 : ADAM 0.14.0 version with Spark 1.1.0 pre-built for Hadoop 2.3
 * avocado : AVOCADO latest version with Spark 1.1.0 pre-built for Hadoop 2.3
 * emboss_6.6.0 : EMBOSS 6.6.0 version
+* hadoop_2.3.0 : HADOOP 2.3.0 version (useful for YARN and HDFS)
+* oraclejdk_7 : Oracle JDK 7 version (hadoop_2.3.0 depend on it)
 * snap-adam-avocado-spark : SNAP, ADAM and AVOCADO latest versions with Spark 1.1.0 pre-built for Hadoop 2.3
 * snap : SNAP latest version
 * snap_1.0beta.15 : SNAP 1.0beta.15 version

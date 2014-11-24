@@ -6,7 +6,6 @@ sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sy
 #Building Docker images
 sudo docker build -t oraclejdk_7 Dockerfiles/oraclejdk_7
 sudo docker build -t spark_1.1.0-prebuilthadoop2.3 Dockerfiles/spark_1.1.0-prebuilthadoop2.3
-sudo docker build -t hdfs Dockerfiles/hdfs
 
 #Launching Weave by choosing a IP/Hostname to peer to
 echo "Please enter the IP/Hostname of the primary node:"

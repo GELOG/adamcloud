@@ -7,7 +7,7 @@ sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sy
 sudo docker build -t snap-adam-avocado-spark Dockerfiles/snap-adam-avocado-spark
 sudo docker build -t oraclejdk_7 Dockerfiles/oraclejdk_7
 sudo docker build -t spark_1.1.0-prebuilthadoop2.3 Dockerfiles/spark_1.1.0-prebuilthadoop2.3
-sudo docker build -t hdfs hdfs
+#sudo docker build -t hadoop_2.3.0 Dockerfiles/hadoop_2.3.0
 
 #Lauching Weave
 sudo weave launch

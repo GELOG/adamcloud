@@ -2,7 +2,7 @@ AdamCloud
 =========
 
 ## Description
-This repository provides multiple Dockerfiles related to the AdamCloud project.
+This repository provides multiple Dockerfiles and Scripts related to the AdamCloud project.
 
 ## Available Dockerfiles
 * adam : ADAM latest version  with Spark 1.1.0 pre-built for Hadoop 2.3
@@ -10,13 +10,17 @@ This repository provides multiple Dockerfiles related to the AdamCloud project.
 * avocado : AVOCADO latest version with Spark 1.1.0 pre-built for Hadoop 2.3
 * emboss_6.6.0 : EMBOSS 6.6.0 version
 * hadoop_2.3.0 : HADOOP 2.3.0 version (useful for YARN and HDFS)
-* oraclejdk_7 : Oracle JDK 7 version (hadoop_2.3.0 depend on it)
+* oraclejdk_7 : Oracle JDK 7 version (hadoop_2.3.0 and spark_1.1.0-prebuilthadoop2.3 depend on it)
 * snap-adam-avocado-spark : SNAP, ADAM and AVOCADO latest versions with Spark 1.1.0 pre-built for Hadoop 2.3
 * snap : SNAP latest version
 * snap_1.0beta.15 : SNAP 1.0beta.15 version
 * spark_1.1.0-prebuilthadoop2.3 : Spark 1.1.0 pre-built for Hadoop 2.3
 * spark_1.1.0-source : Spark 1.1.0 from source code
 * spark_cdh5 : Spark from CDH 5 (shipping inside)
+
+## Available Scripts
+* bootstrap_primary : Configures the primary node with the Client and the Spark Master
+* bootstrap_secondaries : Configures a secondary node with a Spark Worker that connects to the Spark Master
 
 ## Tutorial
 ### Docker basics

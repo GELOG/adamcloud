@@ -1,4 +1,4 @@
-# Building the image using UBUNTU 14.04
+# Building the image using my Oracle JDK 7
 FROM oraclejdk_7
 
 # Naming me as the maintainer

@@ -20,7 +20,7 @@ This repository provides multiple Dockerfiles and Scripts related to the AdamClo
 
 ## Available Scripts
 * bootstrap_primary.sh : Configures the primary node by running cAdvisor, Weave, the clients (SNAP, ADAM and AVOCADO), Spark Master, HDFS NameNode and HDFS SecondaryNameNode
-* bootstrap_secondaries.sh : Configures a secondary node by running cAdvisor, Spark Worker, HDFS NameNode and HDFS DataNode
+* bootstrap_secondaries.sh : Configures a secondary node by running cAdvisor, Weave, Spark Worker and HDFS DataNode
 
 ## Tutorial
 ### Docker basics
@@ -57,7 +57,6 @@ sudo docker run -ti --name "NAME" -v /docker-volume:/docker-volume IMAGE
 ```
 
 ### Running the pipeline on a single host
-#### Standalone
 To start the standalone container, run the following command:
 ```
 sudo docker run -ti --name "standalone" sbonami/snap-adam-avocado-spark
@@ -72,27 +71,15 @@ adam-submit transform SAM ADAM
 avocado-submit ADAM FASTA ADAM_VARIANT CONFIG
 ```
 
-#### Distributed
-*TO DO*
-
 ### Running the pipeline on multiple hosts
-On each host, install Weave by running the following commands:
+On each host, in addition to Docker, you must also install Weave by running the following commands:
 ```
 sudo wget -O /usr/local/bin/weave https://raw.githubusercontent.com/zettio/weave/master/weave
 sudo chmod a+x /usr/local/bin/weave
 sudo apt-get update && sudo apt-get install -y ethtool
 ```
-On the first host, launch Weave with the following command:
-```
-sudo weave launch
-```
-On the other hosts, launch Weave with the following command where *HOST1* is the hostname of the first host:
-```
-sudo weave launch HOST1
-```
-Refer to this link for more details: https://github.com/zettio/weave
 
-*TO COMPLETE*
+You can then use the scripts (bootstrap_primary.sh and bootstrap_secondaries.sh) in order to set up the environment.
 
 ## Data for testing
 I use the hg19 (GRCh37) reference sequence of the "1000 Genomes" project.

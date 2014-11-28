@@ -19,8 +19,8 @@ This repository provides multiple Dockerfiles and Scripts related to the AdamClo
 * spark_cdh5 : Spark from CDH 5 (shipping inside)
 
 ## Available Scripts
-* bootstrap_primary : Configures the primary node with the Client and the Spark Master
-* bootstrap_secondaries : Configures a secondary node with a Spark Worker that connects to the Spark Master
+* bootstrap_primary.sh : Configures the primary node by running cAdvisor, Weave, the clients (SNAP, ADAM and AVOCADO), Spark Master, HDFS NameNode and HDFS SecondaryNameNode
+* bootstrap_secondaries.sh : Configures a secondary node by running cAdvisor, Spark Worker, HDFS NameNode and HDFS DataNode
 
 ## Tutorial
 ### Docker basics

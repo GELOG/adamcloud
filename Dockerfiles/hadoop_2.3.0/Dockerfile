@@ -4,12 +4,6 @@ FROM oraclejdk_7
 # Naming me as the maintainer
 MAINTAINER Sebastien Bonami
 
-# Installing OpenSSH
-RUN sudo apt-get install -y openssh-server
-RUN ssh-keygen -t rsa -f /root/.ssh/id_rsa -N ''
-RUN cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-#RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
 # Installing HADOOP 2.3.0
 ADD http://archive.apache.org/dist/hadoop/core/hadoop-2.3.0/hadoop-2.3.0.tar.gz /
 RUN sudo tar -zxf /hadoop-2.3.0.tar.gz
@@ -39,6 +33,3 @@ ADD core-site.xml $HADOOP_INSTALL/etc/hadoop/core-site.xml
 ADD yarn-site.xml $HADOOP_INSTALL/etc/hadoop/yarn-site.xml
 ADD mapred-site.xml $HADOOP_INSTALL/etc/hadoop/mapred-site.xml
 ADD hdfs-site.xml $HADOOP_INSTALL/etc/hadoop/hdfs-site.xml
-
-# Formatting HDFS NameNode
-RUN hdfs namenode -format

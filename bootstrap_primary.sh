@@ -1,15 +1,7 @@
 #!/bin/bash
 
-#Building Docker images
-sudo docker build --rm=true -t snap Dockerfiles/snap
-sudo docker build --rm=true -t adam Dockerfiles/adam
-sudo docker build --rm=true -t avocado Dockerfiles/avocado
-sudo docker build --rm=true -t oraclejdk_7 Dockerfiles/oraclejdk_7
-sudo docker build --rm=true -t spark_1.1.0-prebuilthadoop2.3 Dockerfiles/spark_1.1.0-prebuilthadoop2.3
-sudo docker build --rm=true -t hadoop_2.3.0 Dockerfiles/hadoop_2.3.0
-
 #Running cAdvisor with web interface on port 8079
-sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=8079:8080 --detach=true --name=cadvisor google/cadvisor:latest
+docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=8079:8080 --detach=true --name=cadvisor google/cadvisor:latest
 
 #Lauching Weave
 sudo weave launch
@@ -24,11 +16,11 @@ sudo weave run 192.168.0.9/24 -ti --name master-spark -h master-spark -p 8080:80
 
 #Running the HDFS NameNode with web interface on port 50070
 sudo weave run 192.168.0.19/24 -ti --name namenode-hdfs -h namenode-hdfs -p 50070:50070 -v /docker-volume:/docker-volume hadoop_2.3.0
-sudo docker exec namenode-hdfs hdfs namenode -format
-sudo docker exec namenode-hdfs mkdir /usr/local/hadoop-2.3.0/logs
-sudo docker exec namenode-hdfs /usr/local/hadoop/sbin/hadoop-daemon.sh start namenode
+docker exec namenode-hdfs hdfs namenode -format
+docker exec namenode-hdfs mkdir /usr/local/hadoop-2.3.0/logs
+docker exec namenode-hdfs /usr/local/hadoop/sbin/hadoop-daemon.sh start namenode
 
 #Running the HDFS SecondaryNameNode with web interface on port 50090
 sudo weave run 192.168.0.20/24 -ti --name secnamenode-hdfs -h secnamenode-hdfs -p 50090:50090 -v /docker-volume:/docker-volume hadoop_2.3.0
-sudo docker exec secnamenode-hdfs mkdir /usr/local/hadoop-2.3.0/logs
-sudo docker exec secnamenode-hdfs /usr/local/hadoop/sbin/hadoop-daemon.sh start secondarynamenode
+docker exec secnamenode-hdfs mkdir /usr/local/hadoop-2.3.0/logs
+docker exec secnamenode-hdfs /usr/local/hadoop/sbin/hadoop-daemon.sh start secondarynamenode

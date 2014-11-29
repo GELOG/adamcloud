@@ -19,8 +19,10 @@ This repository provides multiple Dockerfiles and Scripts related to the AdamClo
 * spark_cdh5 : Spark from CDH 5 (shipping inside)
 
 ## Available Scripts
-* bootstrap_primary.sh : Configures the primary node by running cAdvisor, Weave, the clients (SNAP, ADAM and AVOCADO), Spark Master, HDFS NameNode and HDFS SecondaryNameNode
+* bootstrap_primary.sh : Configures the primary node by running cAdvisor, Weave, the clients (Snap, Adam and Avocado), Spark Master, HDFS NameNode and HDFS SecondaryNameNode
 * bootstrap_secondaries.sh : Configures a secondary node by running cAdvisor, Weave, Spark Worker and HDFS DataNode
+* images_primary.sh : Pulls cAdvisor, Weave, Ubuntu and builds Snap, Adam, Avocado, OracleJdk, Spark and Hadoop images for the primary node
+* images_primary.sh : Pulls cAdvisor, Weave, Ubuntu and builds OracleJdk, Spark and Hadoop images for a secondary node
 
 ## Tutorial
 ### Docker basics
@@ -88,11 +90,14 @@ I use the hg19 (GRCh37) reference sequence of the "1000 Genomes" project.
 * Other references: http://hgdownload.cse.ucsc.edu/downloads.html
 
 ## Useful commands
-### Linux
+### Linux (Ubuntu)
 |Command|Description
 |---|---
+|sudo apt-get install -y *PACKAGE*|Install a package assuming yes to all the questions
 |time *COMMAND*|Show execution time of a command
 |ls -lh *DIRECTORY*|List in a human readable way details of files in a directory
+|rm *FILE*|Remove a file
+|rm -r *DIRECTORY*|Remove a directory
 |df|Show available space on file systems
 |gzip -d *FILE*|Decompress a GNU zip file
 |w3m *URL*|Show a web page
@@ -103,14 +108,22 @@ I use the hg19 (GRCh37) reference sequence of the "1000 Genomes" project.
 ### Docker
 |Command|Description
 |---|---
-|sudo docker images|Show all local images
-|sudo docker ps –a|Show all containers
-|sudo docker rm -f $(sudo docker ps –a -q)|Delete all containers
-|sudo docker start *CONTAINER*|Start a container
-|sudo docker stop *CONTAINER*|Stop a container
-|sudo docker attach *CONTAINER*|Attach to a started container
-|sudo docker login|Connect to Docker Hub
-|sudo docker push *IMAGE*|Push an image to Docker Hub
+|docker images|Show all local images
+|docker ps –a|Show all containers
+|docker rmi -f $(docker images -q)|Delete all local images
+|docker rm -f $(docker ps –a -q)|Delete all containers
+|docker start *CONTAINER*|Start a container
+|docker stop *CONTAINER*|Stop a container
+|docker attach *CONTAINER*|Attach to a started container
+|docker login|Connect to Docker Hub
+|docker push *IMAGE*|Push an image to Docker Hub
+
+### HDFS
+|Command|Description
+|---|---
+|hadoop fs -ls hdfs://*IP*:9000/|List details of files in HDFS
+|hadoop fs -put *FILE* hdfs://*IP*:9000/|Copy a file from local file system to HDFS
+|hadoop fs -get  hdfs://*IP*:9000/*FILE* *FILE* a file to HDPS|Copy a file from HDFS to local file system
 
 ## Contributors
 * Sébastien Bonami (PFE, sep. 2014 - dec. 2014)

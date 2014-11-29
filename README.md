@@ -22,7 +22,7 @@ This repository provides multiple Dockerfiles and Scripts related to the AdamClo
 * bootstrap_primary.sh : Configures the primary node by running cAdvisor, Weave, the clients (Snap, Adam and Avocado), Spark Master, HDFS NameNode and HDFS SecondaryNameNode
 * bootstrap_secondaries.sh : Configures a secondary node by running cAdvisor, Weave, Spark Worker and HDFS DataNode
 * images_primary.sh : Pulls cAdvisor, Weave, Ubuntu and builds Snap, Adam, Avocado, OracleJdk, Spark and Hadoop images for the primary node
-* images_primary.sh : Pulls cAdvisor, Weave, Ubuntu and builds OracleJdk, Spark and Hadoop images for a secondary node
+* images_secondaries.sh : Pulls cAdvisor, Weave, Ubuntu and builds OracleJdk, Spark and Hadoop images for a secondary node
 
 ## Tutorial
 ### Docker basics
@@ -123,7 +123,7 @@ I use the hg19 (GRCh37) reference sequence of the "1000 Genomes" project.
 |---|---
 |hadoop fs -ls hdfs://*IP*:9000/|List details of files in HDFS
 |hadoop fs -put *FILE* hdfs://*IP*:9000/|Copy a file from local file system to HDFS
-|hadoop fs -get  hdfs://*IP*:9000/*FILE* *FILE* a file to HDPS|Copy a file from HDFS to local file system
+|hadoop fs -get  hdfs://*IP*:9000/*FILE* *FILE*|Copy a file from HDFS to local file system
 
 ## Contributors
 * Sébastien Bonami (PFE, sep. 2014 - dec. 2014)

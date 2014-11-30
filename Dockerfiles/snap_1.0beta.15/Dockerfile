@@ -23,8 +23,8 @@ RUN sudo mv /snap-1.0beta.15-linux /usr/local
 RUN sudo ln -s /usr/local/snap-1.0beta.15-linux /usr/local/snap
 ENV SNAP_HOME /usr/local/snap
 
-# Creating an alias to make SNAP run easier
-RUN bash -c 'echo "alias snap="${SNAP_HOME}/snap"" >> ~/.bashrc'
+# Adding the home directory to system variable to make SNAP run easier
+ENV PATH $PATH:$SNAP_HOME
 
 # Autostarting SNAP to show available commands
 RUN bash -c 'echo "snap" >> ~/.bashrc'

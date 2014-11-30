@@ -31,8 +31,8 @@ RUN sudo mv /avocado /usr/local
 RUN cd /usr/local/avocado && sudo mvn package
 ENV AVOCADO_HOME /usr/local/avocado
 
-# Creating an alias to make AVOCADO run easier
-RUN bash -c 'echo "alias avocado-submit="${AVOCADO_HOME}/bin/avocado-submit"" >> ~/.bashrc'
+# Adding the home directory to system variable to make AVOCADO run easier
+ENV PATH $PATH:$AVOCADO_HOME/bin
 
 # Autostarting AVOCADO to show available commands
 RUN bash -c 'echo "avocado-submit" >> ~/.bashrc'

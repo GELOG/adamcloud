@@ -12,9 +12,8 @@ RUN sudo mv /spark-1.1.0-bin-hadoop2.3 /usr/local
 RUN sudo ln -s /usr/local/spark-1.1.0-bin-hadoop2.3 /usr/local/spark
 ENV SPARK_HOME /usr/local/spark
 
-# Creating aliases to make SPARK run easier
-RUN bash -c 'echo "alias spark-submit="${SPARK_HOME}/bin/spark-submit"" >> ~/.bashrc'
-RUN bash -c 'echo "alias spark-shell="${SPARK_HOME}/bin/spark-shell"" >> ~/.bashrc'
+# Adding the home directory to system variable to make SPARK run easier
+ENV PATH $PATH:$SPARK_HOME/bin
 
 # Autostarting SPARK to show available commands
 RUN bash -c 'echo "spark-submit" >> ~/.bashrc'

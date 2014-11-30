@@ -32,9 +32,8 @@ RUN sed -i /usr/local/adam/pom.xml -e '27s!2.2!2.3!'
 RUN cd /usr/local/adam && sudo mvn clean package -DskipTestexp
 ENV ADAM_HOME /usr/local/adam
 
-# Creating aliases to make ADAM run easier
-RUN bash -c 'echo "alias adam-submit="${ADAM_HOME}/bin/adam-submit"" >> ~/.bashrc'
-RUN bash -c 'echo "alias adam-shell="${ADAM_HOME}/bin/adam-shell"" >> ~/.bashrc'
+# Adding the home directory to system variable to make ADAM run easier
+ENV PATH $PATH:$ADAM_HOME/bin
 
 # Autostarting ADAM to show available commands
 RUN bash -c 'echo "adam-submit" >> ~/.bashrc'

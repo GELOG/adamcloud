@@ -52,8 +52,5 @@ RUN sudo mv /avocado /usr/local
 RUN cd /usr/local/avocado && sudo mvn package
 ENV AVOCADO_HOME /usr/local/avocado
 
-# Creating aliases to make SNAP, ADAM and AVOCADO run easier
-RUN bash -c 'echo "alias snap="${SNAP_HOME}/snap"" >> ~/.bashrc'
-RUN bash -c 'echo "alias adam-submit="${ADAM_HOME}/bin/adam-submit"" >> ~/.bashrc'
-RUN bash -c 'echo "alias adam-shell="${ADAM_HOME}/bin/adam-shell"" >> ~/.bashrc'
-RUN bash -c 'echo "alias avocado-submit="${AVOCADO_HOME}/bin/avocado-submit"" >> ~/.bashrc'
+# Adding the home directories to system variable to make SNAP, ADAM and AVOCADO run easier
+ENV PATH $PATH:$SNAP_HOME:$ADAM_HOME/bin:$AVOCADO_HOME/bin

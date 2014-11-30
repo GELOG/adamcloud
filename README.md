@@ -5,11 +5,11 @@ AdamCloud
 This repository provides multiple Dockerfiles and Scripts related to the AdamCloud project.
 
 ## Available Dockerfiles
-* adam : ADAM latest version  with Spark 1.1.0 pre-built for Hadoop 2.3
+* adam : ADAM latest version with Spark 1.1.0 pre-built for Hadoop 2.3
 * adam_0.14.0 : ADAM 0.14.0 version with Spark 1.1.0 pre-built for Hadoop 2.3
 * avocado : AVOCADO latest version with Spark 1.1.0 pre-built for Hadoop 2.3
 * emboss_6.6.0 : EMBOSS 6.6.0 version
-* hadoop_2.3.0 : HADOOP 2.3.0 version (useful for YARN and HDFS)
+* hadoop_2.3.0 : HADOOP 2.3.0 version (useful especially for HDFS in this project)
 * oraclejdk_7 : Oracle JDK 7 version (hadoop_2.3.0 and spark_1.1.0-prebuilthadoop2.3 depend on it)
 * snap-adam-avocado-spark : SNAP, ADAM and AVOCADO latest versions with Spark 1.1.0 pre-built for Hadoop 2.3
 * snap : SNAP latest version
@@ -19,10 +19,15 @@ This repository provides multiple Dockerfiles and Scripts related to the AdamClo
 * spark_cdh5 : Spark from CDH 5 (shipping inside)
 
 ## Available Scripts
-* bootstrap_primary.sh : Configures the primary node by running cAdvisor, Weave, the clients (Snap, Adam and Avocado), Spark Master, HDFS NameNode and HDFS SecondaryNameNode
-* bootstrap_secondaries.sh : Configures a secondary node by running cAdvisor, Weave, Spark Worker and HDFS DataNode
-* images_primary.sh : Pulls cAdvisor, Weave, Ubuntu and builds Snap, Adam, Avocado, OracleJdk, Spark and Hadoop images for the primary node
-* images_secondaries.sh : Pulls cAdvisor, Weave, Ubuntu and builds OracleJdk, Spark and Hadoop images for a secondary node
+### Local Distributed Environment
+* singlehost_images.sh : Pulls cAdvisor, Ubuntu and builds a client (including Snap, Adam and Avocado), OracleJdk, Spark and Hadoop image on the single host
+* singlehost_containers.sh : Runs cAdvisor, a client, a Spark Master and a Spark Worker on the single host
+
+### Cluster Environment
+* multihosts_pri_images.sh : Pulls cAdvisor, Weave, Ubuntu and builds a Snap, Adam, Avocado, OracleJdk, Spark and Hadoop image for the primary host
+* multihosts_sec_images.sh : Pulls cAdvisor, Weave, Ubuntu and builds a OracleJdk, Spark and Hadoop image on a secondary host
+* multihosts_pri_containers.sh : Runs cAdvisor, Weave, the clients (Snap, Adam and Avocado), a Spark Master, a HDFS NameNode and a HDFS SecondaryNameNode on the primary host
+* multihosts_sec_containers.sh : Runs cAdvisor, Weave, a Spark Worker and a HDFS DataNode on a secondary host
 
 ## Tutorial
 ### Docker basics
@@ -46,7 +51,7 @@ sudo docker build -t IMAGE .
 
 To run a simple container from an image, run the following command:
 ```
-sudo docker run -ti --name "NAME" IMAGE
+sudo docker run -ti --name NAME IMAGE
 ```
 *Note: Docker will check if an image with the name NAME is present in the local repository. If so, it creates a container with this image. If not, it downloads the image on Docker Hub and then creates the container.*
 
@@ -55,33 +60,8 @@ If you want to have a shared folder (volume) with the host, create it and then m
 sudo mkdir /docker-volume
 ```
 ```
-sudo docker run -ti --name "NAME" -v /docker-volume:/docker-volume IMAGE
+sudo docker run -ti --name NAME -v /docker-volume:/docker-volume IMAGE
 ```
-
-### Running the pipeline on a single host
-To start the standalone container, run the following command:
-```
-sudo docker run -ti --name "standalone" sbonami/snap-adam-avocado-spark
-```
-Then, you can do the following commands to process a genome:
-```
-snap index FASTA INDEX
-snap paired INDEX FASTQ_1 FASTQ_2 -o SAM
-
-adam-submit transform SAM ADAM
-
-avocado-submit ADAM FASTA ADAM_VARIANT CONFIG
-```
-
-### Running the pipeline on multiple hosts
-On each host, in addition to Docker, you must also install Weave by running the following commands:
-```
-sudo wget -O /usr/local/bin/weave https://raw.githubusercontent.com/zettio/weave/master/weave
-sudo chmod a+x /usr/local/bin/weave
-sudo apt-get update && sudo apt-get install -y ethtool
-```
-
-You can then use the scripts (bootstrap_primary.sh and bootstrap_secondaries.sh) in order to set up the environment.
 
 ## Data for testing
 I use the hg19 (GRCh37) reference sequence of the "1000 Genomes" project.

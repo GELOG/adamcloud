@@ -3,7 +3,7 @@
 #Running cAdvisor with web interface on port 8079
 docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=8079:8080 --detach=true --name=cadvisor google/cadvisor:latest
 
-#Lauching Weave
+#Launching Weave
 sudo weave launch
 
 #Running the clients (SNAP, ADAM and AVOCADO)

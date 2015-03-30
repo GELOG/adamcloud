@@ -3,11 +3,12 @@ __author__ = 'flangelier'
 import sys
 import re
 from subprocess import call
-from docker import Client
+#from docker import Client
 
-master = Client
-slaves = []
-docker_run_base_arg = 'docker run --rm -ti -v /data:/data'.split(' ')
+#master = Client
+#slaves = []
+#docker_run_base_arg = 'docker run --rm -ti -v /data:/data'.split(' ')
+docker_run_base_arg = 'docker run -ti -v /data:/data'.split(' ')
 
 
 def is_valid_hostname(hostname):
@@ -20,25 +21,30 @@ def is_valid_hostname(hostname):
 
 
 def setup_master(host, is_master_node_alone):
-    return True
     print 'Setup master', host
-    master = Client(base_url='tcp://' + host + ':2375')
+    docker_pull_base_arg = 'docker pull'.split(' ')
+    #master = Client(base_url='tcp://' + host + ':2375')
 
     print 'Pulling gelog/snap:1.0beta.15'
-    master.pull(repository='gelog/snap', tag='1.0beta.15')
+    call(docker_pull_base_arg + ['gelog/snap:1.0beta.15'])
+    #master.pull(repository='gelog/snap', tag='1.0beta.15')
 
     print 'Pulling gelog/adam:0.14.0'
-    master.pull(repository='gelog/adam', tag='0.14.0')
+    call(docker_pull_base_arg + ['gelog/adam:0.14.0'])
+    #master.pull(repository='gelog/adam', tag='0.14.0')
 
     print 'Pulling gelog/avocado:0.0.0-master-branch'
-    master.pull(repository='gelog/avocado', tag='0.0.0-master-branch')
+    call(docker_pull_base_arg + ['gelog/avocado:0.0.0-master-branch'])
+    #master.pull(repository='gelog/avocado', tag='0.0.0-master-branch')
 
     print 'Pulling gelog/spark:1.1.0-bin-hadoop2.3'
-    master.pull(repository='gelog/spark', tag='1.1.0-bin-hadoop2.3')
+    call(docker_pull_base_arg + ['gelog/spark:1.1.0-bin-hadoop2.3'])
+    #master.pull(repository='gelog/spark', tag='1.1.0-bin-hadoop2.3')
 
     if not is_master_node_alone:
         print 'Pulling gelog/snap:1.0beta.15'
-        master.pull(repository='gelog/spark', tag='')
+        #call(docker_pull_base_arg + ['gelog/snap:1.0beta.15'])
+        #master.pull(repository='gelog/spark', tag='')
 
 
 #docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=8079:8080 --detach=true --name=cadvisor google/cadvisor:latest
@@ -78,9 +84,8 @@ def run_snap(index_path, index_folder, genome_path, sam_path):
     #response = master.start(container=container.get('Id'))
     #print(response)
 
-    snap_arg = docker_run_base_arg[:] + ['gelog/snap:1.0beta.15']
-    snap_index = snap_arg[:] + ['index', index_path, index_folder]
-    snap_single = snap_arg[:] + ['single', index_folder, genome_path, '-o', sam_path]
+    snap_index = docker_run_base_arg[:] + ['-h', 'snap_index', '--name', 'snap_index', 'gelog/snap:1.0beta.15'] + ['index', index_path, index_folder]
+    snap_single = docker_run_base_arg[:] + ['-h', 'snap_single', '--name', 'snap_single', 'gelog/snap:1.0beta.15'] + ['single', index_folder, genome_path, '-o', sam_path]
 
     #mkdir -p /data/
     #wget -O /data/chr1.fa.gz http://hgdownload.cse.ucsc.edu/goldenPath/hg19/chromosomes/chr1.fa.gz
@@ -96,24 +101,26 @@ def run_snap(index_path, index_folder, genome_path, sam_path):
 
 def run_adam(sam_path, adam_path):
     print "Running adam with sam @", sam_path, 'and outputing the adam @', adam_path
-    adam_transform = docker_run_base_arg[:] + ['gelog/adam:0.14.0', 'adam-submit', 'transform', sam_path, adam_path]
+    adam_transform = docker_run_base_arg[:] + ['-h', 'adam', '--name', 'adam'] + \
+        ['-name adam', 'gelog/adam:0.14.0', 'adam-submit', 'transform', sam_path, adam_path]
     call(adam_transform)
 
 
 def run_avocado(adam_path, index_path, avr_path):
     print "Running avocado with adam @", adam_path, ', index @', index_path, 'and outputing the avr @', avr_path
     basic_properties = '/usr/local/avocado/avocado-sample-configs/basic.properties'
-    avocado_submit = docker_run_base_arg[:] + \
-        ['gelog/avocado:0.0.0-master-branch', 'avocado-submit',
+    avocado_submit = docker_run_base_arg[:] + ['-h', 'avocado', '--name', 'avocado', '-v', '/avocado:/usr/local/avocado/bin'] + \
+        ['gelog/avocado:0.0.0-master-branch', 'avocado-submit', '-Dspark.executor.memory=10g',
          adam_path, index_path, avr_path, basic_properties]
     call(avocado_submit)
-# ['-v', '/avocadoBin:/usr/local/avocado/bin/'] + \
+    #, '-v', '/avocado:/usr/local/avocado/bin'
 
 #docker run -ti --rm --name client-genomics -v /data:/data avo /bin/bash
 #avocado-submit /data/SRR062634.adam /data/chr1.fa /data/SRR062634.avr\
  #       /usr/local/avocado/avocado-sample-configs/basic.properties
 
 def setup_spark():
+    print 'spark'
     #Running the Spark Master and Worker with web interfaces on ports 8080 and 8081
     #docker run -d -ti --name spark -h spark -p 8080:8080 -p 8081:8081 --link client-genomics:client-genomics
     #  -v /docker-volume:/docker-volume spark_1.1.0-prebuilthadoop2.3
@@ -123,13 +130,13 @@ def setup_spark():
     #Add hosts entry for Spark IP Address in the client
     #SPARK_IP=`eval "docker inspect --format '{{ .NetworkSettings.IPAddress }}' spark"`
     #docker exec client-genomics sudo -- sh -c "echo $SPARK_IP spark >> /etc/hosts"
-    master.create_container(tty=True,
-                            stdin_open=True,
-                            hostname='spark',
-                            volumes='/data:/data',
-                            image='gelog/spark',
-                            tag='1.1.0-bin-hadoop2.3',
-                            ports=[8080, 8081])
+ #   master.create_container(tty=True,
+ #                           stdin_open=True,
+ #                           hostname='spark',
+ #                           volumes='/data:/data',
+ #                           image='gelog/spark',
+ #                           tag='1.1.0-bin-hadoop2.3',
+ #                           ports=[8080, 8081])
 
 
 def setup_slave(host, slave_id):
@@ -179,7 +186,7 @@ def init():
             arg = args_iterator.next()
             if is_valid_hostname(arg):
                 if not is_master_setup:
-                    is_master_setup = setup_master(arg, is_node_alone)
+                    is_master_setup = True  # setup_master(arg, is_node_alone)
                 else:
                     slave_count += 1
                     setup_slave(arg, slave_count)
@@ -192,7 +199,9 @@ def init():
 
     if is_node_alone:
         print 'Only 1 node'
-        if cmd_to_do == 'snap':
+        if cmd_to_do == 'pull':
+            setup_master('localhost', True)
+        elif cmd_to_do == 'snap':
             run_snap(index_path, index_folder, genome_path, sam_path)
         elif cmd_to_do == 'adam':
             run_adam(sam_path, adam_path)

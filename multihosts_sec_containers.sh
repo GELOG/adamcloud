@@ -19,11 +19,11 @@ else
 	sudo weave launch $input_hostname
 
 	#Running the Spark Worker with web interface on port 8081
-	sudo weave run 192.168.0.1$input_number/24 -ti --name worker$input_number-spark -h worker$input_number-spark -p 8081:8081 spark_1.1.0-prebuilthadoop2.3
+	sudo weave run 192.168.0.1$input_number/24 -ti --name worker$input_number-spark -h worker$input_number-spark -p 8081:8081 gelog/spark:1.1.0-bin-hadoop2.3
 	docker exec -d worker$input_number-spark /usr/local/spark/bin/spark-class org.apache.spark.deploy.worker.Worker --ip 192.168.0.1$input_number spark://192.168.0.9:7077
 
 	#Running the HDFS DataNode with web interface on port 50075
-	sudo weave run 192.168.0.2$input_number/24 -ti --name datanode$input_number-hdfs -h datanode$input_number-hdfs -p 50075:50075 hadoop_2.3.0
+	sudo weave run 192.168.0.2$input_number/24 -ti --name datanode$input_number-hdfs -h datanode$input_number-hdfs -p 50075:50075 gelog/hadoop:2.3.0
 	docker exec datanode$input_number-hdfs mkdir /usr/local/hadoop-2.3.0/logs
 	docker exec datanode$input_number-hdfs /usr/local/hadoop/sbin/hadoop-daemon.sh start datanode
 fi
